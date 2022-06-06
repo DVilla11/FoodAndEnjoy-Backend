@@ -84,7 +84,7 @@ public class AuthController {
 		RestauranteEntity restauranteLogueado = restauranteEntity.verificarLogin(restaurante);
 		
 		if(restauranteLogueado != null) {
-			String tokenJWT = jwtUtil.create(String.valueOf(restauranteLogueado.getId()), restaurante.getNombreUsuario());
+			String tokenJWT = jwtUtil.create(String.valueOf(restauranteLogueado.getRestaurante_id()), restaurante.getNombreUsuario());
 			restauranteLogueado.setTokenJWT(tokenJWT);
 			response = ResponseEntity.ok()
 				.body(restauranteLogueado);
