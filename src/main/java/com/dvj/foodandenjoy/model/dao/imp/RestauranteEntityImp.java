@@ -23,7 +23,7 @@ public class RestauranteEntityImp implements IRestaurante {
 	
 	@Override
 	public boolean crear(RestauranteEntity restaurante) {
-		if(entityManager.find(RepartidorEntity.class, String.valueOf(restaurante.getId())) == null) {
+		if(entityManager.find(RepartidorEntity.class, String.valueOf(restaurante.getRestaurante_id())) == null) {
 			restaurante.setContraseña(BCrypt.hashpw(restaurante.getContraseña(), BCrypt.gensalt(10)));
 			entityManager.merge(restaurante);
 			return true;
