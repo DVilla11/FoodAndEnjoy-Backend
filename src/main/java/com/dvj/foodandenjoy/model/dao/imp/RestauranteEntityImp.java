@@ -1,6 +1,7 @@
 package com.dvj.foodandenjoy.model.dao.imp;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,55 +11,18 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dvj.foodandenjoy.model.dao.IRestaurante;
-import com.dvj.foodandenjoy.model.dao.entity.RepartidorEntity;
-import com.dvj.foodandenjoy.model.dao.entity.RestauranteEntity;
 import com.dvj.foodandenjoy.model.dao.vo.Restaurante;
 
 @Repository
 @Transactional
-public class RestauranteEntityImp implements IRestaurante {
+public class RestauranteEntityImp{
 
 	@PersistenceContext
 	EntityManager entityManager;
 	
-	@Override
-	public boolean crear(RestauranteEntity restaurante) {
-		if(entityManager.find(RepartidorEntity.class, String.valueOf(restaurante.getRestaurante_id())) == null) {
-			restaurante.setContraseña(BCrypt.hashpw(restaurante.getContraseña(), BCrypt.gensalt(10)));
-			entityManager.merge(restaurante);
-			return true;
-			}
-			
-			return false;
-	}
-
-	@Override
-	public void borrar(int idRestaurante) {
-		Restaurante restaurante = entityManager.find(Restaurante.class, idRestaurante);
-		entityManager.remove(restaurante);
-	}
-
-	@Override
-	public void actualizar(RestauranteEntity restaurante) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Restaurante getUsuarioPorID(int idRestaurante) {
-		return null;
-	}
-
-	@Override
-	public List<Restaurante> getListaUsuarios() {
-		String query = "FROM RestauranteEntity";
-		return entityManager.createQuery(query).getResultList();
-	}
-
-	@Override
-	public RestauranteEntity verificarLogin(RestauranteEntity restaurante) {
-		String query = "FROM RestauranteEntity WHERE nombre_usuario = :nombre_usuario";
-		List<RestauranteEntity> lista = entityManager.createQuery(query)
+	public Restaurante verificarLogin(Restaurante restaurante) {
+		String query = "FROM Restaurante WHERE nombre_usuario = :nombre_usuario";
+		List<Restaurante> lista = entityManager.createQuery(query)
 								.setParameter("nombre_usuario", restaurante.getNombreUsuario())
 								.getResultList();
 		
@@ -71,6 +35,22 @@ public class RestauranteEntityImp implements IRestaurante {
 		}
 		
 		return null;
+	}
+	
+	public List<Restaurante> buscarRestaurantesLocalidad(String localidad) {
+		String query = "FROM Restaurante WHERE localidad = :localidad";
+		List<Restaurante> lista = entityManager.createQuery(query)
+											   .setParameter("localidad", localidad)
+											   .getResultList();
+		
+		return lista;
+	}
+	
+	public void borrarPlatos() {
+		String query = "DELETE FROM Comida WHERE r_fk = NULL";
+		entityManager.createQuery(query).executeUpdate();
+		
+
 	}
 
 }
